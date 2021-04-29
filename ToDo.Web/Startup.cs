@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ToDo.DataAccess;
 
 namespace ToDo.Web
 {
@@ -14,6 +16,8 @@ namespace ToDo.Web
         {
             Configuration = configuration;
         }
+
+        private readonly string _DevelopmentCorsPolicy = "_DevelopmentCorsPolicy";
 
         public IConfiguration Configuration { get; }
 
@@ -28,6 +32,20 @@ namespace ToDo.Web
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(_DevelopmentCorsPolicy,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+                    });
+
+            });
+            services.AddDbContext<ToDoContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DEGSA.ToDo"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +54,7 @@ namespace ToDo.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(_DevelopmentCorsPolicy);
             }
             else
             {
@@ -63,7 +82,7 @@ namespace ToDo.Web
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
             });
         }

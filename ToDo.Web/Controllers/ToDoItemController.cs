@@ -40,6 +40,21 @@ namespace ToDo.Web.Controllers
             return Ok();
         }
 
+        [HttpPatch]
+        public async Task<ActionResult<ToDoItem>> UpdateToDo([FromBody]ToDoItem toDoItem)
+        {
+            _db.Update(toDoItem);
+            await _db.SaveChangesAsync();
+            return toDoItem;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ToDoItem>> AddToDo([FromBody] ToDoItem toDoItem)
+        {
+            _db.Add(toDoItem);
+            await _db.SaveChangesAsync();
+            return toDoItem;
+        }
     }
 }//add update delete
  //POST PATCH DELETE

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 
-const ToDoItem = () => {
+const ToDoItem = (props) => {
+    const {toDoItem} = props;
     return(
-        <p>To do List.</p>
+        <tr>
+            <td>{toDoItem.id}</td>
+            <td>{toDoItem.description}</td>
+            <td style={{color: "green"}}>{toDoItem.isCompleted || "test"}</td>
+        </tr>
     )
 }
 

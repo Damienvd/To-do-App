@@ -3,6 +3,7 @@ import axios from "axios";
 import ToDoItem from "./ToDoItem";
 import AddToDoItem from './AddToDoItem';
 
+
 const ToDo = () => {
   const [todoitems, settodoitems] = useState(null);
 
@@ -27,8 +28,12 @@ const ToDo = () => {
     }
   }, [])
 
-  const handleAdd=newItem => {
+  const handleAdd = newItem => {
     settodoitems([newItem, ...todoitems])
+  }
+
+  const handleDelete = itemToDelete => {
+    settodoitems(currentTodoItems => currentTodoItems.filter(todoitem => todoitem !== itemToDelete))
   }
 
   if(!todoitems)
@@ -44,15 +49,16 @@ const ToDo = () => {
             <table>
               <thead>
                 <tr>
-                  <th style={{color: "red", paddingRight: "10px"}}>ID</th>
-                  <th style={{color: "red", paddingRight: "10px"}}>Description</th>
-                  <th style={{color: "red", paddingRight: "10px"}}>IsCompleted</th>
+                  <th style={{color: "blue", paddingRight: "10px"}}>ID</th>
+                  <th style={{color: "blue", paddingRight: "10px"}}>Description</th>
+                  <th style={{color: "blue", paddingRight: "10px"}}>IsCompleted</th>
+                  <th style={{color: "red", paddingRight: "10px"}}>Delete</th>
                 </tr>
               </thead>
               <tbody>
                 <AddToDoItem onAdd={handleAdd}/>
               {todoitems.map(todoitem => (
-              <ToDoItem toDoItem={todoitem}/>
+              <ToDoItem toDoItem={todoitem} onDelete={handleDelete}/>
               ))}
               </tbody>
             </table>

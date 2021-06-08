@@ -36,6 +36,12 @@ const ToDo = () => {
     settodoitems(currentTodoItems => currentTodoItems.filter(todoitem => todoitem !== itemToDelete))
   }
 
+  const handleUpdate = (oldItem, newItem) => {
+    const updatedItems = [...todoitems]
+    updatedItems[updatedItems.indexOf(oldItem)] = newItem
+    settodoitems(updatedItems)
+  }
+
   if(!todoitems)
   {
     return null;
@@ -58,7 +64,7 @@ const ToDo = () => {
               <tbody>
                 <AddToDoItem onAdd={handleAdd}/>
               {todoitems.map(todoitem => (
-              <ToDoItem toDoItem={todoitem} onDelete={handleDelete}/>
+              <ToDoItem toDoItem={todoitem} onDelete={handleDelete} onUpdate={handleUpdate}/>
               ))}
               </tbody>
             </table>
